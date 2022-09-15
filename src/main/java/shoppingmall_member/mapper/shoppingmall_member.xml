@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="shm_member">
+	<select id="login" resultType="shm_member">
+		select id,nickname,image,isadmin
+		from shoppingmall_member
+		where id=#{id} and passwd=#{passwd}
+	</select>
+	
+	<select id="profileView" resultType="shm_member">
+		select nickname,email,tel,image,address
+		from shoppingmall_member
+		where id=#{id}
+	</select>
+	
+	<select id="member_cart_count" resultType="int">
+		select count(*) from shoppingmall_member_cart
+		where member_id=#{member_id}
+	</select>
+	
+	<select id="getCartTotalPrice" resultType="long">
+		select sum( (price*(100-sale_percent))*product_count )
+		from (
+		    select (select price from shoppingmall_board where id=product_id) price
+		    , (select sale_percent from shoppingmall_board where id=product_id) sale_percent
+		    , product_count
+		    from shoppingmall_member_cart
+		    where member_id=#{member_id} )
+	</select>
+	
+	<select id="memberCartList" resultType="shm_member_cart">
+		select *
+		from (
+			select A.*, rownum as rn
+			from (
+				select id,member_id,product_id,product_count,reg_date
+				, (select image from shoppingmall_board where id=product_id) image
+				, (select product_name from shoppingmall_board where id=product_id) product_name
+				, (select price from shoppingmall_board where id=product_id) price
+				, (select sale_percent from shoppingmall_board where id=product_id) sale_percent
+				from shoppingmall_member_cart
+				where member_id=#{member_id}
+				order by id desc ) A
+		) where rn between #{start} and #{end}
+	</select>
+	
+	<insert id="signup">
+		insert into shoppingmall_member
+		(id,passwd,nickname,email,tel,image,address,isadmin)
+		values
+		(#{id},#{passwd},#{nickname},#{email},#{tel}
+		,#{image},#{address},#{isAdmin})
+	</insert>
+	
+	<insert id="cartInsert">
+		insert into shoppingmall_member_cart
+		(id,member_id,product_id,product_count)
+		values
+		( (select nvl(max(id)+1,1) from shoppingmall_member_cart),#{member_id},#{product_id},#{product_count})
+	</insert>
+	
+	<update id="profileEdit">
+		update shoppingmall_member 
+		set nickname=#{dto.nickname},email=#{dto.email},tel=#{dto.tel}
+		,address=#{dto.address},image=#{dto.image}
+		where id=#{id}
+	</update>
+	
+	<update id="profilePasswordEdit">
+		update shoppingmall_member
+		set passwd=#{passwd}
+		where id=#{id}
+	</update>
+	
+	<delete id="profileDelete">
+		delete from shoppingmall_member
+		where id=#{id}
+	</delete>
+	
+	<delete id="cartDelete">
+		delete from shoppingmall_member_cart
+		where id=#{id}
+	</delete>
+</mapper>

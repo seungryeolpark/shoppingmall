@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 알리아스 설정 -->
+	<typeAliases>
+		<typeAlias type="shoppingmall_member.dto.Shoppingmall_MemberDTO" alias="shm_member"/>
+		<typeAlias type="shoppingmall_member.dto.Shoppingmall_MemberCartDTO" alias="shm_member_cart"/>
+		<typeAlias type="shoppingmall_board.dto.Shoppingmall_BoardDTO" alias="shm_board"/>
+		<typeAlias type="shoppingmall_board.dto.Shoppingmall_BoardCommentDTO" alias="shm_board_comment"/>
+	</typeAliases>
+	
+	<environments default="">
+		<environment id="">
+			<transactionManager type="JDBC" />
+			<dataSource type="JNDI">
+				<property name="data_source" value="java:comp/env/oraDB" />
+			</dataSource>
+		</environment>
+	</environments>
+	<!-- 주의 : 실제 sql query가 있는 메퍼파일은 반드시 등록해야한다. -->
+	<mappers>
+		<mapper resource="/shoppingmall_member/mapper/shoppingmall_member.xml" />
+		<mapper resource="/shoppingmall_board/mapper/shoppingmall_board.xml" />
+	</mappers>
+</configuration>

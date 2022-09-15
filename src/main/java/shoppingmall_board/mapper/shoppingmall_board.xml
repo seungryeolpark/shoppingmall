@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="shm_board">
+	<select id="productList" resultType="shm_board">
+		select *
+		from (
+			select A.*, rownum as rn
+			from (
+				select id,writer,type,subject,image,price,isSale,sale_percent,read_count,like_count,reg_date,product_name
+				,(select count(*) from shoppingmall_board_comment where board_id=1984) comment_count
+				from shoppingmall_board
+				where type=#{type}
+				order by id desc ) A
+		) where rn between #{start} and #{end}
+	</select>
+	
+	<select id="productSearchList" resultType="shm_board">
+		select *
+		from (
+			select A.*, rownum as rn
+			from (
+				select id,writer,type,subject,image,price,isSale,sale_percent,read_count,like_count,reg_date,product_name
+				,(select count(*) from shoppingmall_board_comment where board_id=id) comment_count
+				from shoppingmall_board
+				<choose>
+					<when test="search_option != 'all'">
+						where type=#{search_option}
+						and subject like #{search}
+					</when>
+					<otherwise>
+						where subject like #{search}
+					</otherwise>
+				</choose>
+				order by id desc ) A
+		) where rn between #{start} and #{end}
+	</select>
+	
+	<select id="product" resultType="shm_board">
+		select *
+		from shoppingmall_board
+		where id=#{board_id}
+	</select>
+	
+	<select id="product_count" resultType="int">
+		select count(*) from shoppingmall_board
+		where type=#{type}
+	</select>
+	
+	<select id="product_search_count" resultType="int">
+		select count(*) from shoppingmall_board
+		<choose>
+			<when test="search_option != 'all'">
+				where type=#{search_option}
+				and subject like #{search}
+			</when>
+			<otherwise>
+				where subject like #{search}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="product_comment_count" resultType="int">
+		select count(*) from shoppingmall_board_comment
+		where board_id=#{board_id}
+	</select>
+	
+	<select id="productCommentList" resultType="shm_board_comment">
+		select *
+		from (
+			select A.*, rownum as rn
+			from (
+				select id,board_id,writer,nickname,content,image,reg_date
+				from shoppingmall_board_comment
+				where board_id=#{board_id}
+				order by id desc ) A
+		) where rn between #{start} and #{end}
+	</select>
+
+	<insert id="productInsert">
+		insert into shoppingmall_board
+		(id,type,subject,image,price,isSale,sale_percent,writer
+		,product_name)
+		values
+		( (select nvl(max(id)+1,1) from shoppingmall_board),#{type}
+		,#{subject},#{image},#{price},#{isSale},#{sale_percent}
+		,#{writer},#{product_name})
+	</insert>
+	
+	<insert id="productCommentInsert">
+		insert into shoppingmall_board_comment
+		(id,board_id,writer,content,image,nickname)
+		values
+		( (select nvl(max(id)+1,1) from shoppingmall_board_comment),#{board_id}
+		,#{writer},#{content},#{image},#{nickname})
+	</insert>
+	
+	<update id="productEdit">
+		update shoppingmall_board 
+		set subject=#{dto.subject},type=#{dto.type},product_name=#{dto.product_name}
+		,price=#{dto.price},isSale=#{dto.isSale},sale_percent=#{dto.sale_percent}
+		,image=#{dto.image}
+		where id=#{board_id}
+	</update>
+	
+	<update id="ProductPlusRead">
+		update shoppingmall_board
+		set read_count=read_count+1
+		where id=#{board_id}
+	</update>
+	
+	<update id="ProductPlusLike">
+		update shoppingmall_board
+		set like_count=like_count+1
+		where id=#{board_id}
+	</update>
+	
+	<update id="productCommentEdit">
+		update shoppingmall_board_comment
+		set content=#{content}
+		where id=#{id}
+	</update>
+	
+	<delete id="productDelete">
+		delete from shoppingmall_board
+		where id=#{board_id}
+	</delete>
+	
+	<delete id="productCommentDelete">
+		delete from shoppingmall_board_comment
+		where id=#{comment_id}
+	</delete>
+</mapper>

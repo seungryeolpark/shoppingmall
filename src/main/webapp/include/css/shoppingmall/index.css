@@ -1,0 +1,34 @@
+@charset "UTF-8";
+header {
+	height: 50px;
+}
+
+nav {
+	height: 100px;
+}
+
+#content_wrapper {
+	display: flex;
+	min-height: 500px;
+	padding-bottom: 50px;
+}
+
+aside {
+	width: 30%;
+	border: 1px solid black;
+}
+
+section {
+	width: 100%;
+}
+
+footer {
+	height: 50px;
+	position: relative;
+	transform: translateY(-100%);
+	background: black;
+	color: white;
+	font-weight: bold;
+	text-align: center;
+	padding-top: 10px;
+}
