@@ -8,8 +8,8 @@
 			select A.*, rownum as rn
 			from (
 				select id,writer,type,subject,image,price,isSale,sale_percent,read_count,like_count,reg_date,product_name
-				,(select count(*) from shoppingmall_board_comment where board_id=1984) comment_count
-				from shoppingmall_board
+				,(select count(*) from shoppingmall_board_comment where board_id=sb.id) comment_count
+				from shoppingmall_board sb
 				where type=#{type}
 				order by id desc ) A
 		) where rn between #{start} and #{end}
@@ -21,8 +21,8 @@
 			select A.*, rownum as rn
 			from (
 				select id,writer,type,subject,image,price,isSale,sale_percent,read_count,like_count,reg_date,product_name
-				,(select count(*) from shoppingmall_board_comment where board_id=id) comment_count
-				from shoppingmall_board
+				,(select count(*) from shoppingmall_board_comment where board_id=sb.id) comment_count
+				from shoppingmall_board sb
 				<choose>
 					<when test="search_option != 'all'">
 						where type=#{search_option}

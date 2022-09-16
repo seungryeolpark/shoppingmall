@@ -3,7 +3,7 @@
 <style>
 .item {
 	display: flex;
-	border: 1px solid black;
+	border-bottom: 1px solid black;
 }
 
 .item .img_item {
@@ -11,18 +11,18 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	border: 1px solid black;
 }
 
 .item .content_item {
 	width: 60%;
-	border: 1px solid black;
+	border-left: 1px solid black;
+	border-right: 1px solid black;
 }
 
 .item .basket_item {
 	width: 20%;
 	height: 40%;
-	border: 1px solid black;
+	text-align: center;
 }
 
 #img_view {
@@ -43,6 +43,7 @@
 }
 
 #edit_delete_btn {
+	margin: 10px 0px;
 	height: 33px;
 }
 
@@ -63,6 +64,11 @@
 #content_price .salePrice {
 	color: red;
 	display: inline;
+}
+
+#product_insert {
+	margin-top: 10px;
+	text-align: center;
 }
 </style>
 <section>
@@ -130,8 +136,10 @@
 				</script>
 			</c:if>
 		</div>
-		<input type="number" class="form-control" id="basket_num${dto.id}" name="basket_num${dto.id}">
-		<input type="button" class="btn btn-primary" id="basket_btn${dto.id}" value="장바구니담기">
+		<div class="input-group">
+			<input type="number" class="form-control" id="basket_num${dto.id}" name="basket_num${dto.id}">
+			<input type="button" class="btn btn-primary" id="basket_btn${dto.id}" value="장바구니담기">
+		</div>
 	</div>
 </div>
 <script>
@@ -192,7 +200,9 @@ function list(page) {
 </c:if>
 
 <c:if test="${sessionScope.isAdmin == 'y'}">
+<div id="product_insert">
 	<a href="${path}/shoppingmall/product_insert.jsp" class="btn btn-primary">상품 등록</a>
+</div>
 </c:if>
 <c:if test="${not empty param.success}">
 	<script type="text/javascript">

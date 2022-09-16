@@ -75,11 +75,10 @@
  		<td class="comment_content">
  			${dto.content}
  		</td>
- 		<c:if test="${sessionScope.id == dto.writer}">
  		<td class="comment_btn">
+ 		<c:if test="${sessionScope.id == dto.writer}">
  			<input type="button" class="btn btn-primary" id="comment_editFormBtn${dto.id}" value="수정" />
  			<input type="button" class="btn btn-danger" id="comment_deleteBtn${dto.id}" value="삭제" />
- 		</td>
  		<script>
  		$(function() {
  			$("#comment_editFormBtn${dto.id}").click(function() {
@@ -98,6 +97,7 @@
  		});
  		</script>
  		</c:if>
+ 		</td>
 	</tr>
 	<tr id="comment_edit${dto.id}" class="comment_edit">
 		<td class="comment_edit_content" colspan="2">

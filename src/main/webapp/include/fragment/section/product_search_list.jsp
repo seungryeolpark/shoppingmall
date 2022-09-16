@@ -3,7 +3,7 @@
 <style>
 .item {
 	display: flex;
-	border: 1px solid black;
+	border-bottom: 1px solid black;
 }
 
 .item .img_item {
@@ -11,18 +11,17 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	border: 1px solid black;
 }
 
 .item .content_item {
 	width: 60%;
-	border: 1px solid black;
+	border-left: 1px solid black;
+	border-right: 1px solid black;;
 }
 
 .item .basket_item {
 	width: 20%;
 	height: 40%;
-	border: 1px solid black;
 }
 
 #img_view {
@@ -43,12 +42,32 @@
 }
 
 #edit_delete_btn {
+	margin: 10px 0px;
 	height: 33px;
+	text-align: center;
 }
 
 #pagination_item {
 	width: 500px;
 	margin: 0 auto;
+}
+
+#content_price .salePercent {
+	display: inline;
+}
+
+#content_price .oriPrice {
+	text-decoration: line-through;
+	display: inline;
+}
+
+#content_price .salePrice {
+	color: red;
+	display: inline;
+}
+
+#product_insert {
+	text-align: center;
 }
 </style>
 <section>
@@ -62,7 +81,20 @@
 			<h3>${dto.subject} (${dto.comment_count})</h3>
 		</div>
 		<div id="content_price">
-			<h2>${dto.price}원</h2>
+			<c:if test="${dto.isSale == 'y' }">
+				<h3 class="salePercent">${dto.sale_percent}% </h3> 
+				<span class="oriPrice">
+					<fmt:formatNumber value="${dto.price}" pattern="#,###" />
+				</span>
+				<h2 class="salePrice">
+					<fmt:formatNumber value="${dto.sale_price}" pattern="#,###" />
+				</h2>
+			</c:if>
+			<c:if test="${dto.isSale == 'n' }">
+				<h2>
+					<fmt:formatNumber value="${dto.price}" pattern="#,###" />
+				</h2>
+			</c:if>
 		</div>
 		<div id="content_count">
 			<span id="content_like_count">
@@ -103,8 +135,10 @@
 				</script>
 			</c:if>
 		</div>
-		<input type="number" class="form-control" id="basket_num${dto.id}" name="basket_num${dto.id}">
-		<input type="button" class="btn btn-primary" id="basket_btn${dto.id}" value="장바구니담기">
+		<div class="input-group">
+			<input type="number" class="form-control" id="basket_num${dto.id}" name="basket_num${dto.id}">
+			<input type="button" class="btn btn-primary" id="basket_btn${dto.id}" value="장바구니담기">
+		</div>
 	</div>
 </div>
 </c:forEach>
@@ -146,7 +180,9 @@ function list(page) {
 </c:if>
 
 <c:if test="${sessionScope.isAdmin == 'y'}">
+<div id="product_insert">
 	<a href="${path}/shoppingmall/product_insert.jsp" class="btn btn-primary">상품 등록</a>
+</div>
 </c:if>
 <c:if test="${not empty param.success}">
 	<script type="text/javascript">

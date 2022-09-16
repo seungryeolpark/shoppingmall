@@ -103,7 +103,7 @@
 			</tr>
 			<tr>
 				<td colspan="2" class="input">
-					<h4>${dto.product_name}</h4>
+					<h6>${dto.product_name}</h6>
 				</td>
 			</tr>
 			<tr>

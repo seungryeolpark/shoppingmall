@@ -204,6 +204,13 @@ public class Shoppingmall_BoardDAO {
 				subject = subject.replace(search, "<font color='red'>"+search+"</font>");
 				
 				dto.setSubject(subject);
+				
+				if (dto.getIsSale().equals("y")) {
+					int price = dto.getPrice();
+					int sale_percent = dto.getSale_percent();
+					
+					dto.setSale_price((int) (price*(1-(sale_percent*0.01) )));
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

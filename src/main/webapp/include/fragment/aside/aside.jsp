@@ -15,8 +15,8 @@
 }
 
 #profile_img {
-	height: 50px;
-	width: auto;
+	width: 80%;
+	height: auto;
 }
 </style>
 <div id="login_wrapper">

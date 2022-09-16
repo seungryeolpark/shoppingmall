@@ -3,21 +3,21 @@
 <section>
 <c:if test="${not empty sessionScope.id}">
 <style>
-#insert_wrapper {
+#edit_wrapper {
 	display: flex;
 	flex-wrap: wrap;
 	width: 100%;
 	height: 100%;
 }
 
-#insert_form {
+#edit_form {
 	display: flex;
 	flex-wrap: wrap;
 	width: 100%;
 	height: 100%;
 }
 
-#insert_img_wrapper {
+#edit_img_wrapper {
 	width: 50%;
 	display: flex;
 	flex-wrap: wrap;
@@ -26,7 +26,7 @@
 	height: 100%;
 }
 
-#insert_input_wrapper {
+#edit_input_wrapper {
 	width: 50%;
 	display: flex;
 	flex-wrap: wrap;
@@ -39,7 +39,7 @@
 	text-align: center;
 }
 
-#insert_img {
+#edit_img {
 	height: auto;
 	width: 80%;
 }
@@ -61,22 +61,23 @@
 	display: none;
 }
 </style>
-<div id="insert_wrapper">
-<form action="${path}/shoppingmall_board_servlet/productInsert.do" method="post"
-enctype="multipart/form-data" id="product_insert_form">
-<div id="insert_form">
-	<div id="insert_img_wrapper">
-			<img id="insert_img" src="/product/noImage.png">
+<div id="edit_wrapper">
+<form action="${path}/shoppingmall_board_servlet/productEdit.do" method="post"
+enctype="multipart/form-data" id="product_edit_form">
+<input type="hidden" id="board_id" name="board_id" value="${dto.id}">
+<div id="edit_form">
+	<div id="edit_img_wrapper">
+			<img id="edit_img" src="/product/${dto.image}">
 			<input type="file" id="img_file" name="img_file" accept="image/*">
 	</div>
-	<div id="insert_input_wrapper">
-		<table id="insert_table">
+	<div id="edit_input_wrapper">
+		<table id="edit_table">
 			<tr>
 				<td class="input">
 					<label for="subject" class="form-label">제목</label>
 				</td>
 				<td class="input">
-					<input type="text" class="form-control" id="subject" name="subject">
+					<input type="text" class="form-control" id="subject" name="subject" value="${dto.subject}">
 				</td>
 			</tr>
 			<tr>
@@ -96,7 +97,7 @@ enctype="multipart/form-data" id="product_insert_form">
 					<label for="product_name" class="form-label">제품명</label>
 				</td>
 				<td class="input">
-					<input type="text" class="form-control" id="product_name" name="product_name">
+					<input type="text" class="form-control" id="product_name" name="product_name" value="${dto.product_name}">
 				</td>
 			</tr>
 			<tr>
@@ -107,7 +108,7 @@ enctype="multipart/form-data" id="product_insert_form">
 					<label for="price" class="form-label">가격</label>
 				</td>
 				<td class="input">
-					<input type="number" class="form-control" id="price" name="price">
+					<input type="number" class="form-control" id="price" name="price" value="${dto.price}">
 				</td>
 			</tr>
 			<tr>
@@ -128,7 +129,7 @@ enctype="multipart/form-data" id="product_insert_form">
 					<label for="sale_percent" class="form-label">할인률</label>
 				</td>
 				<td class="input">
-					<input type="number" class="form-control" id="sale_percent" name="sale_percent">
+					<input type="number" class="form-control" id="sale_percent" name="sale_percent" value="${dto.sale_percent}">
 				</td>
 			</tr>
 			<tr>
@@ -136,7 +137,7 @@ enctype="multipart/form-data" id="product_insert_form">
 			</tr>
 			<tr>
 				<td class="input" id="btn" colspan="2">
-					<input type="button" class="btn btn-primary" id="insertBtn" value="등록">
+					<input type="button" class="btn btn-primary" id="editBtn" value="수정">
 				</td>
 			</tr>
 		</table>
@@ -151,11 +152,18 @@ $(function() {
 		
 		var reader = new FileReader();
 		reader.onload = function(e) {
-			$("#insert_img").attr("src", e.target.result);
+			$("#edit_img").attr("src", e.target.result);
 		}
 		
 		reader.readAsDataURL(file);
 	});
+	
+	if ("${dto.isSale}" == 'y') {
+		$("input:checkbox[id='isSale']").prop("checked", true);
+		$("#sale_percent_input").show();
+	} else {
+		$("input:checkbox[id='isSale']").prop("checked", false);
+	}
 	
 	$("#isSale").change(function() {
 		if ($("#isSale").is(":checked")) {
@@ -165,7 +173,7 @@ $(function() {
 		}
 	});
 	
-	$("#insertBtn").click(function() {
+	$("#editBtn").click(function() {
 		var isPermit = true;
 		
 		clear();
@@ -177,7 +185,7 @@ $(function() {
 			if (empty_alert("#sale_percent", "#alert_sale_percent", "할인률 비어있습니다")) isPermit = false;
 		}
 		
-		if (isPermit) $("#product_insert_form").submit();
+		if (isPermit) $("#product_edit_form").submit();
 	});
 });
 
